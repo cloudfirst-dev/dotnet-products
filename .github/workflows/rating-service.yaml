@@ -1,0 +1,29 @@
+name: rating-service
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - rating-service/**
+      - .github/workflows/rating-service.yml
+  pull_request:
+    branches: [ master ]
+    paths:
+      - rating-service/**
+      - .github/workflows/rating-service.yml
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: jacobsee/s2i-github-action@master
+      with:
+        path: rating-service
+        base: registry.access.redhat.com/ubi8/dotnet-31:3.1
+        output_image: quay.io/cloudfirst/dotnet-rating-service:latest
+        image_push_registry: quay.io
+        image_push_username: ${{ secrets.DOCKER_USERNAME }}
+        image_push_password: ${{ secrets.DOCKER_PASSWORD }}
