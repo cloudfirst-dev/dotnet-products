@@ -5,6 +5,6 @@ namespace rating_service
 {
     public class Rating
     {
-        public int votes { get; set; }
+        public int Votes { get; set; }
     }
 }
