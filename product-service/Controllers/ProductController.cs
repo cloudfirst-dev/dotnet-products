@@ -34,7 +34,7 @@ namespace product_service.Controllers
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var streamTask = client.GetStreamAsync(Configuration["RatingUrl"]);
+            var streamTask = client.GetStreamAsync(Configuration["RatingUrl"] + "/rating/" + id);
 
             var rating = await JsonSerializer.DeserializeAsync<Rating>(await streamTask);
 
