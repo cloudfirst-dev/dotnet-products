@@ -7,19 +7,23 @@ using Microsoft.Extensions.Logging;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace product_service.Controllers
 {
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly IConfiguration Configuration;
+
 
         private readonly ILogger<ProductController> _logger;
         private static readonly HttpClient client = new HttpClient();
 
-        public ProductController(ILogger<ProductController> logger)
+        public ProductController(ILogger<ProductController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            Configuration = configuration;
         }
 
         [HttpGet]
@@ -30,7 +34,7 @@ namespace product_service.Controllers
             client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json"));
 
-            var streamTask = client.GetStreamAsync("https://localhost:5001/rating/1");
+            var streamTask = client.GetStreamAsync(Configuration["RatingUrl"]);
 
             var rating = await JsonSerializer.DeserializeAsync<Rating>(await streamTask);
 
