@@ -14,6 +14,8 @@ namespace product_service.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private static List<Product> products = new List<Product>();
+        private static Boolean init = false;
         private readonly IConfiguration Configuration;
 
 
@@ -24,6 +26,29 @@ namespace product_service.Controllers
         {
             _logger = logger;
             Configuration = configuration;
+
+            if(!init) {
+                products.Add(new Product {
+                    Name = "Soccer Ball",
+                    Id = products.Count
+                });
+                init = true;
+            }
+        }
+
+        [HttpGet]
+        [Route("/product")]
+        public List<Product> Get() {
+            return products;
+        }
+
+        [HttpPost]
+        [Route("/product")]
+        public void Post([FromBody] Product product) {
+            Console.WriteLine("Creating new product " + products.Count);
+            product.Id = products.Count;
+            products.Add(product);
+            Console.WriteLine("Added new product " + products.Count);
         }
 
         [HttpGet]
@@ -38,9 +63,10 @@ namespace product_service.Controllers
 
             var rating = await JsonSerializer.DeserializeAsync<Rating>(await streamTask);
 
-            return new Product {
-                Votes = rating.Votes
-            };
+            var product = products[id];
+            product.Votes = rating.Votes;
+
+            return product;
         }
     }
 }

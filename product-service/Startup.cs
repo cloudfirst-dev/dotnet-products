@@ -1,3 +1,5 @@
+using Build.Security.AspNetCore.Middleware.Extensions;
+using Build.Security.AspNetCore.Middleware.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,15 @@ namespace product_service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddBuildAuthorization(options =>
+            {
+                options.Enable = true;
+                options.BaseAddress = "http://localhost:8181";
+                options.PolicyPath = "/authz/allow";
+                options.AllowOnFailure = false;
+                options.IncludeHeaders = true;
+                options.PermissionHierarchySeparator = '.';
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +52,8 @@ namespace product_service
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseBuildAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
