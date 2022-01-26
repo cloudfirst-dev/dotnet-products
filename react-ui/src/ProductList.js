@@ -37,6 +37,7 @@ class ProductList extends React.Component {
     }
 
     componentDidMount() {
+        this.fetchProducts();
     }
 
     fetchProducts() {

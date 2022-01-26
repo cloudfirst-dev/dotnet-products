@@ -7,12 +7,26 @@ class Jwt extends React.Component {
         super(props);
         this.state = {
             jwt: props.jwt,
-            jwtToken: this.signJwt(this.buildJwt(props.jwt), props.jwtSecret),
-            Manager: true
+            jwtToken: null,
+            Manager: false
         };
         this.props.updateToken(this.state.jwtToken);
         this.setJwt = this.setJwt.bind(this);
         this.setRoles = this.setRoles.bind(this);
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
+    }
+
+    login() {
+        var state = {...this.state}
+        state.jwtToken = this.signJwt(this.buildJwt(state.jwt), this.props.jwtSecret)
+
+        this.setState(state);
+        this.props.updateToken(state.jwtToken);
+    }
+
+    logout() {
+        this.props.updateToken(null);
     }
 
     setJwt(event) {
@@ -70,13 +84,15 @@ class Jwt extends React.Component {
                     <Col>roles</Col>
                     <Col>
                         Manager <input type="checkbox" checked={this.state.Manager} name="Manager" onChange={this.setRoles} />
-                    
-                    <input type="text" value={this.state.jwt.roles} name="roles" onChange={this.setJwt} />
                     </Col>
                 </Row>
                 <Row>
                     <Col>Token</Col>
                     <Col><textarea value={this.state.jwtToken} onChange={this.void}/></Col>
+                </Row>
+                <Row>
+                    <Col><button type="button" onClick={this.login}>Login</button></Col>
+                    <Col><button type="button" onClick={this.logout}>Logout</button></Col>
                 </Row>
             </Container>
         );

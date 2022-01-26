@@ -16,7 +16,7 @@ class App  extends React.Component {
         givenName: "John",
         surname: "Doe",
         email: "johndoe@example.com",
-        roles: ["Manager"]
+        roles: []
       },
       jwtToken: null,
       roles: [],
@@ -25,7 +25,7 @@ class App  extends React.Component {
     this.updateToken = this.updateToken.bind(this);
   }
 
-  updateToken(jwtToken) {
+  updateToken(jwtToken, jwt) {
     fetch("/roles", {headers: {'Authorization': "Bearer " + jwtToken}})
       .then(res => res.json())
       .then(
@@ -39,10 +39,15 @@ class App  extends React.Component {
   }
 
   render() {
+    console.log(this.state.jwtToken);
     return (
       <div className="App">
         <header className="App-header">
           <Container>
+          { this.state.jwtToken !== null ? 
+            <Row>
+              <Col>Welcome Back { this.state.jwt.givenName }</Col>
+            </Row> : null }
             <Row>
               <Col><ProductList jwtToken={this.state.jwtToken} roles={this.state.roles} /></Col>
               <Col><Jwt jwt={this.state.jwt} jwtSecret="qwertyuiopasdfghjklzxcvbnm123456" updateToken={this.updateToken} /></Col>
