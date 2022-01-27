@@ -13,7 +13,7 @@ module.exports = function(app) {
   app.use(
       '/roles',
       createProxyMiddleware({
-        target: 'https://127.0.0.1:5005',
+        target: 'https://18.224.190.254:5005',
         changeOrigin: true,
         secure: false,
       })

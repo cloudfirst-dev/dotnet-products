@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Row } from 'react-bootstrap';
 import Product from './Product';
+import NewProduct from './NewProduct';
 
 class ProductList extends React.Component {
     constructor(props) {
@@ -24,6 +25,7 @@ class ProductList extends React.Component {
                     {items.map(item => (
                         <Row key={item.id}><Product product={item} roles={this.props.roles}/></Row>
                     ))}
+                    { this.props.roles.indexOf("createProduct") >= 0 ? <NewProduct jwtToken={this.props.jwtToken} fetchProducts={() => this.fetchProducts()} /> : null }
                 </Container>
             )
         }

@@ -8,7 +8,8 @@ class Jwt extends React.Component {
         this.state = {
             jwt: props.jwt,
             jwtToken: null,
-            Manager: false
+            Manager: false,
+            Admin: false,
         };
         this.props.updateToken(this.state.jwtToken);
         this.setJwt = this.setJwt.bind(this);
@@ -83,7 +84,8 @@ class Jwt extends React.Component {
                 <Row>
                     <Col>roles</Col>
                     <Col>
-                        Manager <input type="checkbox" checked={this.state.Manager} name="Manager" onChange={this.setRoles} />
+                        Manager <input type="checkbox" checked={this.state.Manager} name="Manager" onChange={this.setRoles} /> <br/>
+                        Admin <input type="checkbox" checked={this.state.Admin} name="Admin" onChange={this.setRoles} />
                     </Col>
                 </Row>
                 <Row>

@@ -51,6 +51,12 @@ namespace product_service.Controllers
             Console.WriteLine("Added new product " + products.Count);
         }
 
+        [HttpDelete]
+        [Route("/product/{id}")]
+        public void Delete(int id) {
+            products.RemoveAt(id);
+        }
+
         [HttpGet]
         [Route("/product/{id}")]
         public async Task<Product> Get(int id)
