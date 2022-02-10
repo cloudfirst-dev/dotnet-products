@@ -27,11 +27,13 @@ namespace product_service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var opaAddress = Environment.GetEnvironmentVariable("OPA_ADDRESS");
+
             services.AddControllers();
             services.AddBuildAuthorization(options =>
             {
                 options.Enable = true;
-                options.BaseAddress = "http://localhost:8181";
+                options.BaseAddress = opaAddress ?? "http://localhost:8181";
                 options.PolicyPath = "/authz/allow";
                 options.AllowOnFailure = false;
                 options.IncludeHeaders = true;
