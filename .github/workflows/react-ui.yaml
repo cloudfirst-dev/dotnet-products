@@ -26,8 +26,7 @@ jobs:
       run: cd react-ui && npm install && npm run build
     - uses: jacobsee/s2i-github-action@master
       with:
-        path: react-ui
-        path_context: './build'
+        path: './react-ui/build'
         base: registry.access.redhat.com/ubi8/nginx-120
         output_image: quay.io/cloudfirst/dotnet-react-ui:latest
         image_push_registry: quay.io
