@@ -33,7 +33,7 @@ class ProductList extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if(this.props.jwtToken != prevProps.jwtToken) {
+        if(this.props.jwtToken !== prevProps.jwtToken) {
             this.fetchProducts();
         }
     }
