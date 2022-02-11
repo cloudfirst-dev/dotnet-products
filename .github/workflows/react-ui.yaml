@@ -1,0 +1,34 @@
+name: react-ui
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - react-ui/**
+      - .github/workflows/react-ui.yml
+  pull_request:
+    branches: [ master ]
+    paths:
+      - react-ui/**
+      - .github/workflows/react-ui.yml
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '17'
+    - name: build
+      run: cd react-ui && npm install && npm run build
+    - uses: jacobsee/s2i-github-action@master
+      with:
+        path: './react-ui/build'
+        base: registry.access.redhat.com/ubi8/nginx-120
+        output_image: quay.io/cloudfirst/dotnet-react-ui:latest
+        image_push_registry: quay.io
+        image_push_username: ${{ secrets.DOCKER_USERNAME }}
+        image_push_password: ${{ secrets.DOCKER_PASSWORD }}

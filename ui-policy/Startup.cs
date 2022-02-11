@@ -1,5 +1,3 @@
-using Build.Security.AspNetCore.Middleware.Extensions;
-using Build.Security.AspNetCore.Middleware.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +10,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using ui_policy.Service;
+using ui_policy.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace product_service
+
+namespace ui_policy
 {
     public class Startup
     {
@@ -27,17 +31,14 @@ namespace product_service
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var opaAddress = Environment.GetEnvironmentVariable("OPA_ADDRESS");
-
             services.AddControllers();
-            services.AddBuildAuthorization(options =>
+            services.AddSwaggerGen(c =>
             {
-                options.Enable = true;
-                options.BaseAddress = opaAddress ?? "http://localhost:8181";
-                options.PolicyPath = "/authz/allow";
-                options.AllowOnFailure = false;
-                options.IncludeHeaders = true;
-                options.PermissionHierarchySeparator = '.';
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ui_policy", Version = "v1" });
+            });
+            services.TryAddSingleton<IOpaService, OpaService>();
+            services.TryAddSingleton<OpaConfiguration>(new OpaConfiguration {
+                BaseAddress = "http://localhost:8181"
             });
         }
 
@@ -47,6 +48,8 @@ namespace product_service
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ui_policy v1"));
             }
 
             app.UseHttpsRedirection();
@@ -54,8 +57,6 @@ namespace product_service
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseBuildAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
