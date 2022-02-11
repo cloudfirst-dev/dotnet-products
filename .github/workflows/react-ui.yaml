@@ -23,7 +23,7 @@ jobs:
       with:
         node-version: '17'
     - name: build
-      run: npm run build
+      run: cd react-ui && npm run build
     - uses: jacobsee/s2i-github-action@master
       with:
         path: react-ui
